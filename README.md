@@ -22,9 +22,4 @@ mv $HOME/.profile $HOME/.profile_original
 # Crate links to the files from vraishell
 ln -s $HOME/.local/etc/vraishell/bashrc.sh $HOME/.bashrc
 ln -s $HOME/.local/etc/vraishell/profile.sh $HOME/.profile
-
-# Create "scratchpads" to be able to customize it
-touch $HOME/.local/etc/vraishell/aliases/999scratchpad.sh \
-    $HOME/.local/etc/vraishell/environment/999scratchpad.sh \
-    $HOME/.local/etc/vraishell/path/999scratchpad.sh
 ```
