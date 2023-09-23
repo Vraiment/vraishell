@@ -23,3 +23,7 @@ mv $HOME/.profile $HOME/.profile_original
 ln -s $HOME/.local/etc/vraishell/bashrc.sh $HOME/.bashrc
 ln -s $HOME/.local/etc/vraishell/profile.sh $HOME/.profile
 ```
+
+## Validation
+
+These shell scripts use [`shellcheck`](https://www.shellcheck.net) to validate correctness as much as possible. Just run `./validate.sh` to run ShellCheck against all relevant scripts. Adding a new folder at the oot will require updating this file.

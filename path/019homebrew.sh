@@ -1,3 +1,5 @@
+#!/bin/sh
+
 if [ -d "/opt/local/bin" ]; then
     pathprepend "/opt/local/bin"
 fi
