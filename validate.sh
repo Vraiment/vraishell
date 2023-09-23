@@ -25,6 +25,7 @@ function validate-files() {
         functions/*
         path/*
         bashrc.sh
+        install.sh
         profile.sh
         validate.sh
     )
