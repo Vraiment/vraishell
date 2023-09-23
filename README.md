@@ -11,17 +11,14 @@ There are a couple of environment that are set:
 ## Installation
 
 ```shell
-mkdir -p $HOME/.local/etc
-git clone git@github.com:Vraiment/vraishell.git $HOME/.local/etc/vraishell
+SCRATCH_DIR=$(mktemp -d)
+BRANCH=master
 
-# Backup original files
-mv $HOME/.bashrc $HOME/.bashrc_original
-mv $HOME/.bash_profile $HOME/.bashrc_profile_original
-mv $HOME/.profile $HOME/.profile_original
-
-# Crate links to the files from vraishell
-ln -s $HOME/.local/etc/vraishell/bashrc.sh $HOME/.bashrc
-ln -s $HOME/.local/etc/vraishell/profile.sh $HOME/.profile
+wget -O "$SCRATCH_DIR"/"$BRANCH".zip https://github.com/Vraiment/vraishell/archive/refs/heads/"$BRANCH".zip && \
+    unzip "$SCRATCH_DIR"/"$BRANCH".zip -d "$SCRATCH_DIR" && \
+    mkdir -p "$HOME"/.local/src && \
+    mv -i -T --backup=t "$SCRATCH_DIR"/vraishell-"$BRANCH" "$HOME"/.local/src/vraishell && \
+    "$HOME"/.local/src/vraishell/install.sh
 ```
 
 ## Validation
