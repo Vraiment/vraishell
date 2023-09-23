@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Custom/smart prompt with the following format:
 #     {rc} [pwd]
 #     dateTime user@host ?>
@@ -8,36 +10,52 @@
 #     dateTime = date and time in format YYYY/MM/DD@hh:mm:ssTZ
 #     user = current user
 #     host = the current host (cnan be personalized with $CUSTOM_PROMPT_HOST)
-function __customGeneratePrompt {
-    local EXIT="$?"
+#
+# The SC2034 warning is being disabled as the variables are kept for reference
+__customGeneratePrompt() {
+    _VRAI_SHELL_EXIT="$?"
     
     if [ -z "$CUSTOM_PROMPT_HOST" ]; then
-        local HOST_NAME='\h'
+        _VRAI_SHELL_HOST_NAME='\h'
     else
-        local HOST_NAME="$CUSTOM_PROMPT_HOST"
+        _VRAI_SHELL_HOST_NAME="$CUSTOM_PROMPT_HOST"
     fi
     
-    local RED='\[$(tput setaf 1)\]'
-    local GREEN='\[$(tput setaf 2)\]'
-    local BLUE='\[$(tput setaf 4)\]'
+    # shellcheck disable=SC2016
+    _VRAI_SHELL_RED='\[$(tput setaf 1)\]'
+    # shellcheck disable=SC2016
+    _VRAI_SHELL_GREEN='\[$(tput setaf 2)\]'
+    # shellcheck disable=SC2016,SC2034
+    _VRAI_SHELL_BLUE='\[$(tput setaf 4)\]'
+
+    # shellcheck disable=SC2016
+    _VRAI_SHELL_CYAN='\[$(tput setaf 6)\]'
+    # shellcheck disable=SC2016
+    _VRAI_SHELL_YELLOW='\[$(tput setaf 3)\]'
+    # shellcheck disable=SC2016
+    _VRAI_SHELL_MAGENTA='\[$(tput setaf 5)\]'
     
-    local CYAN='\[$(tput setaf 6)\]'
-    local YELLOW='\[$(tput setaf 3)\]'
-    local MAGENTA='\[$(tput setaf 5)\]'
+    # shellcheck disable=SC2016,SC2034
+    _VRAI_SHELL_BOLD='\[$(tput bold)\]'
+    # shellcheck disable=SC2016
+    _VRAI_SHELL_RESET='\[$(tput sgr0)\]'
     
-    local BOLD='\[$(tput bold)\]'
-    local RESET='\[$(tput sgr0)\]'
+    _VRAI_SHELL_CPWD="[$_VRAI_SHELL_YELLOW\$PWD$_VRAI_SHELL_RESET]"
+    _VRAI_SHELL_DATE_TIME="$_VRAI_SHELL_MAGENTA\D{%G/%m/%d@%T%Z}$_VRAI_SHELL_RESET"
+    _VRAI_SHELL_HOST_USER="$_VRAI_SHELL_CYAN\u@$_VRAI_SHELL_HOST_NAME$_VRAI_SHELL_RESET"
     
-    local CPWD="[$YELLOW\$PWD$RESET]"
-    local DATE_TIME="$MAGENTA\D{%G/%m/%d@%T%Z}$RESET"
-    local HOST_USER="$CYAN\u@$HOST_NAME$RESET"
-    
-    if [ $EXIT != 0 ]; then
-        local RC="{$RED$EXIT$RESET}"
+    if [ $_VRAI_SHELL_EXIT != 0 ]; then
+        _VRAI_SHELL_RC="{$_VRAI_SHELL_RED$_VRAI_SHELL_EXIT$_VRAI_SHELL_RESET}"
     else
-        local RC="{$GREEN$EXIT$RESET}"
+        _VRAI_SHELL_RC="{$_VRAI_SHELL_GREEN$_VRAI_SHELL_EXIT$_VRAI_SHELL_RESET}"
     fi
     
-    export PS1="$RC $CPWD\n$DATE_TIME $HOST_USER \\$> "
+    export PS1="$_VRAI_SHELL_RC $_VRAI_SHELL_CPWD\n$_VRAI_SHELL_DATE_TIME $_VRAI_SHELL_HOST_USER \\$> "
+
+    # This is to solve warning SC3043, /bin/sh does not support
+    # `local` so I'm simulating that behavior here
+    unset _VRAI_SHELL_BLUE _VRAI_SHELL_BOLD _VRAI_SHELL_CPWD _VRAI_SHELL_CYAN _VRAI_SHELL_DATE_TIME \
+        _VRAI_SHELL_EXIT _VRAI_SHELL_GREEN _VRAI_SHELL_HOST_NAME _VRAI_SHELL_HOST_USER \
+        _VRAI_SHELL_MAGENTA _VRAI_SHELL_RED _VRAI_SHELL_RESET _VRAI_SHELL_YELLOW
 }
 PROMPT_COMMAND=__customGeneratePrompt

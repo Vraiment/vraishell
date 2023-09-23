@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Adds user's personal bin directory
 if [ -d "$HOME/bin" ] ; then
     pathprepend "$HOME/bin"

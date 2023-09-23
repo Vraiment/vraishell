@@ -1,11 +1,7 @@
-# -----------------------------------------------------------------------------#
-# Author: Vraiment                                                             #
-#                                                                              #
-# Handy aliases for commands                                                   #
-# -----------------------------------------------------------------------------#
+#!/bin/sh
 
 # Forces things like git to use vim if vim is available
-if type vim &> /dev/null; then
+if type vim > /dev/null 2>&1; then
     export EDITOR=vim
 fi
 
@@ -39,7 +35,8 @@ export JAVA_TOOL_OPTIONS="-Dlog4j2.formatMsgNoLookups=true ${JAVA_TOOL_OPTIONS}"
 if command -v keychain > /dev/null; then
     keychain -q --nogui "$HOME/.ssh/id_rsa"
     # The following sourced file has the env variables for the SSH agent
-    if [ -f "$HOME/.keychain/${HOSTNAME}-sh" ]; then
-        source "$HOME/.keychain/${HOSTNAME}-sh"
+    if [ -f "$HOME/.keychain/$(hostname)-sh" ]; then
+        # shellcheck disable=SC1090
+        . "$HOME/.keychain/$(hostname)-sh"
     fi
 fi
