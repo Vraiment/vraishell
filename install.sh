@@ -4,15 +4,17 @@ set -e # Exit immediately if a command exits with a non-zero status.
 set -o pipefail # Propagate exit code on a pipeline
 set -x # Print commands and their arguments as they are executed.
 
-relative_install_dir=.local/etc/vraishell
-readonly relative_install_dir
+readonly relative_install_dir=.local/etc/vraishell
 
 function main() {
     mkdir --parents "$HOME"/"$(dirname "$relative_install_dir")"
 
     symlink-vraishell-dir
-    backup-bash-profile
-    install-rc-files
+
+    # Install files required for the shell
+    install-rc-file src/profile.sh "$HOME"/.profile
+    install-rc-file src/bash_profile.sh "$HOME"/.bash_profile
+    install-rc-file src/bashrc.sh "$HOME"/.bashrc
 }
 
 function symlink-vraishell-dir() {
@@ -28,13 +30,16 @@ function symlink-vraishell-dir() {
     fi
 }
 
-function backup-bash-profile() {
-    if [ ! -e "$HOME"/.bash_profile ]; then
+function backup-file() {
+    local file tmp
+    
+    file="$1"
+    readonly file
+
+    if [ ! -e "$file" ]; then
         # Do nothing if the file does not exist
         return
     fi
-
-    local tmp
 
     # Convoluted way of moving `"$HOME"/.bash_profile`
     # "into itself" so we can leverage `mv --backup`
@@ -42,16 +47,11 @@ function backup-bash-profile() {
     # 2. Move the temporary file into the file we
     #    want to backup
     # 3. Delete the temporary file
-    tmp=$(mktemp)
+    tmp="$(mktemp)"
     readonly tmp
 
-    mv --backup=numbered "$tmp" "$HOME"/.bash_profile
-    rm "$HOME"/.bash_profile
-}
-
-function install-rc-files() {
-    install-rc-file profile.sh .profile
-    install-rc-file bashrc.sh .bashrc
+    mv --backup=numbered "$tmp" "$file"
+    rm "$file"
 }
 
 function install-rc-file() {
@@ -63,8 +63,9 @@ function install-rc-file() {
     target="$2"
     readonly target
 
-    if ! first-symlinks-to-second "$HOME"/"$target" "$HOME"/"$relative_install_dir"/"$source"; then
-        ln --symbolic --force --backup=numbered "$relative_install_dir"/"$source" "$HOME"/"$target"
+    if ! first-symlinks-to-second "$target" "$HOME"/"$relative_install_dir"/"$source"; then
+        backup-file "$target"
+        ln --symbolic --force --backup=numbered "$relative_install_dir"/"$source" "$target"
     fi
 }
 

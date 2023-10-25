@@ -1,0 +1,4 @@
+# Ignore everything except .gitignore, this is so any plugin is not checked in
+# into the VraiShell repository
+*
+!.gitignore
