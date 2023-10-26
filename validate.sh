@@ -28,7 +28,7 @@ function validate-files() {
     )
     readonly files
 
-    shellcheck "$files"
+    shellcheck "${files[@]}"
 }
 
 main "$@"
