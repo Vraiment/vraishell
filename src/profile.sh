@@ -9,10 +9,12 @@ else
 fi
 
 if ls -A "$VRAI_SHELL_DIR"/plugins/*/profile.d/* > /dev/null 2>&1; then
-    for PLUGIN in "$VRAI_SHELL_DIR"/plugins/*; do
-        for FILE in "$PLUGIN"/profile.d/*; do
+    for _VRAI_PLUGIN in "$VRAI_SHELL_DIR"/plugins/*; do
+        for _VRAI_FILE in "$_VRAI_PLUGIN"/profile.d/*; do
             # shellcheck disable=SC1090
-            . "$FILE"
+            . "$_VRAI_FILE"
         done
+        unset _VRAI_FILE
     done
+    unset _VRAI_PLUGIN
 fi

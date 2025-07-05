@@ -17,12 +17,14 @@ if [ -e "$HOME"/.profile ]; then
 fi
 
 if ls -A "$VRAI_SHELL_DIR"/plugins/*/bash_profile.d/* &> /dev/null; then
-    for PLUGIN in "$VRAI_SHELL_DIR"/plugins/*; do
-        for FILE in "$PLUGIN"/bash_profile.d/*; do
+    for _VRAI_PLUGIN in "$VRAI_SHELL_DIR"/plugins/*; do
+        for _VRAI_FILE in "$_VRAI_PLUGIN"/bash_profile.d/*; do
             # shellcheck disable=SC1090
-            source "$FILE"
+            source "$_VRAI_FILE"
         done
+        unset _VRAI_FILE
     done
+    unset _VRAI_PLUGIN
 fi
 
 # Load `.bashrc` if an interactive shell is started

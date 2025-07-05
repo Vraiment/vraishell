@@ -9,10 +9,12 @@ else
 fi
 
 if ls -A "$VRAI_SHELL_DIR"/plugins/*/bashrc.d/* &> /dev/null; then
-    for PLUGIN in "$VRAI_SHELL_DIR"/plugins/*; do
-        for FILE in "$PLUGIN"/bashrc.d/*; do
+    for _VRAI_PLUGIN in "$VRAI_SHELL_DIR"/plugins/*; do
+        for _VRAI_FILE in "$_VRAI_PLUGIN"/bashrc.d/*; do
             # shellcheck disable=SC1090
-            source "$FILE"
+            source "$_VRAI_FILE"
         done
+        unset _VRAI_FILE
     done
+    unset _VRAI_PLUGIN
 fi
